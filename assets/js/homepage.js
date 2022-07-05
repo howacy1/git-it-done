@@ -27,21 +27,27 @@ var getUserRepos = function(user) {
 
   // make a get request to url
   fetch(apiUrl)
-    .then(function(response) {
-      // request was successful
-      if (response.ok) {
-        console.log(response);
-        response.json().then(function(data) {
-          console.log(data);
-          displayRepos(data, user);
-        });
-      } else {
+    .then(response => {
+      if (!response.ok) {
         alert('Error: GitHub User Not Found');
+        
+        throw new Error('Error: GitHub User Not Found')
       }
+
+      console.log(response)
+
+      return response.json()
+    })
+    .then(data => {
+      console.log(data)
+
+      displayRepos(data, user)
     })
     .catch(function(error) {
+      console.error(error)
+
       alert('Unable to connect to GitHub');
-    });
+    })
 };
 
 var displayRepos = function(repos, searchTerm) {
